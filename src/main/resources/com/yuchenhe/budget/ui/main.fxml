@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" styleClass="root-pane">
+  <top>
+    <HBox styleClass="toolbar" spacing="8" alignment="CENTER_LEFT">
+      <Label text="Budget Manager" styleClass="app-title"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <Button fx:id="prevMonth" text="‹" onAction="#onPrevMonth"/>
+      <Label fx:id="monthLabel" styleClass="month-label"/>
+      <Button fx:id="nextMonth" text="›" onAction="#onNextMonth"/>
+    </HBox>
+  </top>
+  <center>
+    <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE">
+      <Tab text="Transactions">
+        <SplitPane dividerPositions="0.64">
+          <TableView fx:id="txnTable">
+            <columns>
+              <TableColumn fx:id="colDate" text="Date" prefWidth="95"/>
+              <TableColumn fx:id="colKind" text="Kind" prefWidth="75"/>
+              <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+              <TableColumn fx:id="colAmount" text="Amount" prefWidth="95" styleClass="num"/>
+              <TableColumn fx:id="colDescription" text="Description" prefWidth="180"/>
+            </columns>
+            <placeholder><Label text="No transactions this month"/></placeholder>
+          </TableView>
+          <VBox spacing="6" styleClass="form">
+            <Label text="Entry" styleClass="section"/>
+            <Label text="Date"/>
+            <DatePicker fx:id="fDate" maxWidth="Infinity"/>
+            <Label text="Kind"/>
+            <ComboBox fx:id="fKind" maxWidth="Infinity"/>
+            <Label text="Amount"/>
+            <TextField fx:id="fAmount" promptText="0.00"/>
+            <Label text="Category"/>
+            <ComboBox fx:id="fCategory" maxWidth="Infinity"/>
+            <Label text="Description"/>
+            <TextField fx:id="fDescription"/>
+            <Label fx:id="formErrors" styleClass="error" wrapText="true"/>
+            <HBox spacing="6">
+              <Button text="Save" defaultButton="true" onAction="#onSave"/>
+              <Button text="New" onAction="#onNew"/>
+              <Button fx:id="deleteBtn" text="Delete" onAction="#onDelete"/>
+            </HBox>
+          </VBox>
+        </SplitPane>
+      </Tab>
+      <Tab text="Summary">
+        <HBox spacing="12">
+          <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+          <VBox spacing="8" HBox.hgrow="ALWAYS">
+            <GridPane hgap="18" vgap="4" styleClass="totals">
+              <Label text="Income" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+              <Label fx:id="sIncome" styleClass="num" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+              <Label text="Net spending" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+              <Label fx:id="sSpent" styleClass="num" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+              <Label text="Balance" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+              <Label fx:id="sBalance" styleClass="num" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+            <TableView fx:id="lineTable" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="lCategory" text="Category" prefWidth="130"/>
+                <TableColumn fx:id="lGroup" text="Group" prefWidth="75"/>
+                <TableColumn fx:id="lSpent" text="Spent" prefWidth="90"/>
+                <TableColumn fx:id="lLimit" text="Limit" prefWidth="90"/>
+                <TableColumn fx:id="lRemaining" text="Remaining" prefWidth="95"/>
+              </columns>
+            </TableView>
+            <HBox spacing="6" alignment="CENTER_LEFT">
+              <Label text="Limit for selected category:"/>
+              <TextField fx:id="limitField" prefWidth="90" promptText="none"/>
+              <Button text="Set" onAction="#onSetLimit"/>
+              <Label fx:id="limitError" styleClass="error"/>
+            </HBox>
+            <Label text="Plan vs. actual" styleClass="section"/>
+            <GridPane fx:id="planGrid" hgap="18" vgap="4"/>
+          </VBox>
+          <PieChart fx:id="pie" legendVisible="false" prefWidth="320" title="Spending by category"/>
+        </HBox>
+      </Tab>
+      <Tab text="Settings">
+        <VBox spacing="10">
+          <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+          <Label text="Allocation rule (percent of income)" styleClass="section"/>
+          <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="Needs"/><Spinner fx:id="pNeeds" prefWidth="80" editable="true"/>
+            <Label text="Wants"/><Spinner fx:id="pWants" prefWidth="80" editable="true"/>
+            <Label text="Savings"/><Spinner fx:id="pSavings" prefWidth="80" editable="true"/>
+            <Button text="Save rule" onAction="#onSaveRule"/>
+          </HBox>
+          <Label fx:id="ruleMsg" wrapText="true"/>
+          <Label text="Categories" styleClass="section"/>
+          <HBox spacing="10">
+            <ListView fx:id="catList" prefHeight="220" prefWidth="260"/>
+            <VBox spacing="6">
+              <TextField fx:id="catName" promptText="Name"/>
+              <ComboBox fx:id="catGroup" maxWidth="Infinity"/>
+              <Button text="Add" maxWidth="Infinity" onAction="#onAddCategory"/>
+              <Button text="Rename / regroup selected" maxWidth="Infinity" onAction="#onRenameCategory"/>
+              <Button text="Delete selected" maxWidth="Infinity" onAction="#onDeleteCategory"/>
+              <ComboBox fx:id="mergeTarget" maxWidth="Infinity" promptText="Merge selected into..."/>
+              <Button text="Merge" maxWidth="Infinity" onAction="#onMergeCategory"/>
+            </VBox>
+          </HBox>
+          <Label fx:id="catMsg" wrapText="true"/>
+        </VBox>
+      </Tab>
+      <Tab text="Data">
+        <VBox spacing="10">
+          <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+          <Label text="Import CSV (date,kind,amount,category,description)" styleClass="section"/>
+          <HBox spacing="8" alignment="CENTER_LEFT">
+            <Button text="Choose file and preview..." onAction="#onPreview"/>
+            <CheckBox fx:id="skipDuplicates" text="Skip duplicates" selected="true"/>
+            <Button fx:id="importBtn" text="Import" disable="true" onAction="#onImport"/>
+          </HBox>
+          <Label fx:id="importMsg" wrapText="true"/>
+          <TableView fx:id="previewTable" prefHeight="200">
+            <columns>
+              <TableColumn fx:id="pLine" text="Line" prefWidth="55"/>
+              <TableColumn fx:id="pStatus" text="Status" prefWidth="90"/>
+              <TableColumn fx:id="pDetail" text="Detail" prefWidth="520"/>
+            </columns>
+          </TableView>
+          <Label text="Export and backup" styleClass="section"/>
+          <HBox spacing="8">
+            <Button text="Export this month as CSV..." onAction="#onExport"/>
+            <Button text="Back up database..." onAction="#onBackup"/>
+            <Button text="Restore from backup..." onAction="#onRestore"/>
+          </HBox>
+          <Label fx:id="dataMsg" wrapText="true"/>
+          <Label fx:id="dbPath" styleClass="muted" wrapText="true"/>
+        </VBox>
+      </Tab>
+    </TabPane>
+  </center>
+</BorderPane>

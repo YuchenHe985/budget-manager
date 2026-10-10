@@ -1,0 +1,13 @@
+.root-pane { -fx-font-family: "System"; -fx-font-size: 13px; -fx-background-color: #f6f7f9; }
+.toolbar { -fx-padding: 8 12; -fx-background-color: #1f3a5f; }
+.toolbar .label { -fx-text-fill: white; }
+.toolbar .button { -fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; }
+.app-title { -fx-font-size: 16px; -fx-font-weight: bold; }
+.month-label { -fx-font-size: 14px; -fx-min-width: 110; -fx-alignment: center; }
+.form { -fx-padding: 10; }
+.section { -fx-font-weight: bold; -fx-font-size: 14px; }
+.error { -fx-text-fill: #b00020; }
+.muted { -fx-text-fill: #6b7280; }
+.invalid { -fx-border-color: #b00020; -fx-border-width: 1.5; -fx-border-radius: 3; }
+.over { -fx-text-fill: #b00020; -fx-font-weight: bold; }
+.totals .num { -fx-font-weight: bold; }
